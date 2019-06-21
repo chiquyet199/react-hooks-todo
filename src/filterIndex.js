@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom'
 import Typography from '@material-ui/core/Typography'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
+import TodoFilter from './TodoFilter'
 import useTodoState from './useTodoState'
+import useFilterState from './useFilterState'
 import './styles.css'
 
 const App = () => {
-  const {todos, addTodo, deleteTodo, toggleTodo, filter} = useTodoState([])
+  const {todos, addTodo, deleteTodo, toggleTodo} = useTodoState([])
+  const {filter, setFilter} = useFilterState('all')
   const saveTodo = todoText => {
     const trimmedText = todoText.trim()
 
@@ -15,6 +18,12 @@ const App = () => {
       addTodo(trimmedText)
     }
   }
+  const conditionMapper = {
+    all: item => item,
+    done: item => item.done,
+    notDone: item => !item.done,
+  }
+  const displayTodo = todos.filter(conditionMapper[filter])
   return (
     <div className="App">
       <Typography component="h1" variant="h2">
@@ -22,8 +31,9 @@ const App = () => {
       </Typography>
 
       <TodoForm saveTodo={saveTodo} />
+      <TodoFilter filter={setFilter}/>
 
-      <TodoList todos={todos} deleteTodo={deleteTodo} toggleTodo={toggleTodo}/>
+      <TodoList todos={displayTodo} deleteTodo={deleteTodo} toggleTodo={toggleTodo}/>
     </div>
   )
 }
