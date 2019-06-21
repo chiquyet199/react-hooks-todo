@@ -8,6 +8,7 @@ export default initialValue => {
   return {
     todos,
     addTodo: todoText => {
+      // todos.push({text: 'lambaitap',id:0})
       setTodos([...todos, {id: id++, text: todoText, done: false}])
     },
     deleteTodo: todoId => {
